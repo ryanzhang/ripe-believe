@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -47,10 +48,10 @@ public class FruitController {
     }
 
     @GetMapping("/{id}")
-    public Fruit get(@PathVariable("id") Integer id) {
+    public Optional<Fruit> get(@PathVariable("id") Integer id) {
         verifyFruitExists(id);
 
-        return repository.findOne(id);
+        return repository.findById(id);
     }
 
     @GetMapping
@@ -86,11 +87,11 @@ public class FruitController {
     public void delete(@PathVariable("id") Integer id) {
         verifyFruitExists(id);
 
-        repository.delete(id);
+        repository.deleteById(id);
     }
 
     private void verifyFruitExists(Integer id) {
-        if (!repository.exists(id)) {
+        if (!repository.existsById(id)) {
             throw new NotFoundException(String.format("Fruit with id=%d was not found", id));
         }
     }

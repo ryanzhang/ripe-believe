@@ -205,7 +205,7 @@ public class BoosterApplicationIT {
                 .delete(String.valueOf(apple.getId()))
                 .then()
                 .statusCode(204);
-        assertFalse(fruitRepository.exists(apple.getId()));
+        assertFalse(fruitRepository.existsById(apple.getId()));
     }
 
     @Test

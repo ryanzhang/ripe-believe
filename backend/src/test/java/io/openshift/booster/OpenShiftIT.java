@@ -20,11 +20,14 @@ import static io.restassured.RestAssured.given;
 import static org.awaitility.Awaitility.await;
 
 import io.openshift.booster.service.GreetingProperties;
+import io.restassured.RestAssured;
+
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import org.arquillian.cube.openshift.impl.enricher.AwaitRoute;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -32,17 +35,24 @@ import org.junit.runner.RunWith;
 public class OpenShiftIT extends AbstractBoosterApplicationTest {
 
     @AwaitRoute(path = "/health")
-    @RouteURL("${app.name}")
+    // @RouteURL("${app.name}")
+    @RouteURL("rhoar-spring-quickstart-backend")
     private URL baseURL;
 
+    @BeforeClass
+    public static void setUpProxy(){
+        System.out.println("setting proxy");
+        RestAssured.proxy("squid.corp.redhat.com", 3128);
+    }
     @Test
     public void testStopServiceEndpoint() {
+        System.out.println("Arqullian started...");
         given()
            .baseUri(baseURI())
            .get("api/stop")
            .then()
            .statusCode(200);
-
+        System.out.println("Stop call has fired, Now wait...");
         await("Await for the application to die").atMost(5, TimeUnit.MINUTES)
                 .until(() -> !isAlive());
 
@@ -50,6 +60,17 @@ public class OpenShiftIT extends AbstractBoosterApplicationTest {
                 .until(this::isAlive);
     }
 
+    @Test
+    public void testHealth() {
+        System.out.println("setting proxy");
+        RestAssured.proxy("squid.corp.redhat.com", 3128);
+        System.out.println("Arqullian started...");
+        given().baseUri(baseURI()).get("health").then().statusCode(200);
+        System.out.println("Stop call has fired, Now wait...");
+        await("Await for the application to die").atMost(5, TimeUnit.MINUTES).until(() -> !isAlive());
+
+        await("Await for the application to restart").atMost(5, TimeUnit.MINUTES).until(this::isAlive);
+    }
     @Override
     protected GreetingProperties getProperties() {
         return new GreetingProperties();

@@ -23,16 +23,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class ShutdownController {
 
-    private final TomcatShutdown tomcatShutdown;
+    // private final TomcatShutdown tomcatShutdown;
 
-    @Autowired
-    public ShutdownController(TomcatShutdown tomcatShutdown) {
-        this.tomcatShutdown = tomcatShutdown;
-    }
+    // @Autowired
+    // public ShutdownController(TomcatShutdown tomcatShutdown) {
+    //     this.tomcatShutdown = tomcatShutdown;
+    // }
 
-    @RequestMapping("/stop")
-    public void shutdown() throws Exception {
-        tomcatShutdown.shutdown();
-    }
+    // @RequestMapping("/stop")
+    // public void shutdown() throws Exception {
+    //     tomcatShutdown.shutdown();
+    // }
 
 }

@@ -19,8 +19,10 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import io.openshift.booster.service.TomcatShutdown;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
+// import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+// import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
@@ -32,22 +34,23 @@ public class BoosterApplication {
 
     // Customize servlet container so that we could stop Tomcat when requested.
 
-    @Bean
-    public EmbeddedServletContainerCustomizer embeddedServletContainerCustomizer(TomcatShutdown tomcatShutdown) {
-        return container -> {
-            if (container instanceof TomcatEmbeddedServletContainerFactory) {
-                ((TomcatEmbeddedServletContainerFactory) container).addContextCustomizers(tomcatShutdown::setContext);
-            }
-        };
-    }
+    // @Bean
+    // public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> customerContainer(TomcatShutdown tomcatShutdown) {
+    //     return container -> {
+    //         if (container instanceof ConfigurableServletWebServerFactory) {
+    //             container.
+    //             // ((ConfigurableServletWebServerFactory) container).addInitializers(tomcatShutdown::setContext);
+    //         }
+    //     };
+    // }
 
-    @Bean
-    public TomcatShutdown tomcatShutdown() {
-        return new TomcatShutdown();
-    }
+    // @Bean
+    // public TomcatShutdown tomcatShutdown() {
+    //     return new TomcatShutdown();
+    // }
 
-    @Bean
-    public JacksonJsonProvider jsonProvider() {
-        return new JacksonJsonProvider();
-    }
+    // @Bean
+    // public JacksonJsonProvider jsonProvider() {
+    //     return new JacksonJsonProvider();
+    // }
 }
